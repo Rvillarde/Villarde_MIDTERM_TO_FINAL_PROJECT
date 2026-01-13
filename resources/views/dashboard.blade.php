@@ -254,7 +254,7 @@
                         </button>
                         <button type="button" onclick="closeEditModal()"
                             class="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg shadow-[0_0_12px_rgba(255,255,255,0.3)]">
-                            Cance
+                            Cancel
                         </button>
                     </div>
 
