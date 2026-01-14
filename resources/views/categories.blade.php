@@ -69,7 +69,6 @@
                 <select name="filter"
                     class="px-3 py-2 bg-gray-800 text-white rounded-md border border-green-600/40 shadow-[0_0_12px_rgba(0,200,0,0.4)] focus:ring-green-500">
                     <option value="">All Categories</option>
-                    <option value="with_games" {{ request('filter') === 'with_games' ? 'selected' : '' }}>With Games</option>
                 </select>
             </div>
 
@@ -95,7 +94,6 @@
             <table class="w-full table-auto border-collapse text-white">
                 <thead>
                     <tr class="bg-gray-800 border-b border-purple-500/30">
-                        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">Photo</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">Name</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">Description</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">Games</th>

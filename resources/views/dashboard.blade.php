@@ -19,9 +19,9 @@
     <div class="w-full h-48 rounded-xl bg-gradient-to-r from-gray-900 to-gray-700 shadow-[0_0_25px_rgba(0,150,255,0.5)] border border-blue-600/50 flex items-end p-8">
         <div>
             <h1 class="text-4xl font-bold text-white drop-shadow-[0_0_8px_rgba(0,150,255,0.8)]">
-                FAKE STEAM STORE
+                GAME LIBRARY SYSTEM
             </h1>
-            <p class="text-gray-300 text-lg mt-1">Manage your game library style.</p>
+            <p class="text-gray-300 text-lg mt-1">Manage your games with style.</p>
         </div>
     </div>
 
@@ -99,36 +99,61 @@
     </div>
 
     <!-- SEARCH & FILTER -->
-    <div class="bg-gray-900 p-6 rounded-xl border border-blue-500/40 shadow-[0_0_25px_rgba(0,120,255,0.5)] mb-6">
-        <h3 class="text-2xl font-semibold mb-4 text-white drop-shadow-[0_0_10px_rgba(0,130,255,0.7)]">
-            Search & Filter Games
-        </h3>
-        <form method="GET" action="{{ route('dashboard') }}" class="flex flex-wrap gap-4 items-end">
-            <div class="flex-1 min-w-64">
-                <label class="text-gray-300 text-sm">Search by Title</label>
-                <input type="text" name="search" value="{{ $request->search }}" placeholder="Enter game title..."
-                    class="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-blue-600/40 rounded-md focus:ring-blue-500 shadow-[0_0_12px_rgba(0,100,255,0.4)]">
-            </div>
-            <div class="flex-1 min-w-64">
+<div class="bg-gray-900 p-6 rounded-xl border border-blue-500/40 shadow-[0_0_25px_rgba(0,120,255,0.5)] mb-6">
+    <h3 class="text-2xl font-semibold mb-4 text-white drop-shadow-[0_0_10px_rgba(0,130,255,0.7)]">
+        Search & Filter Games
+    </h3>
+
+    <form method="GET" action="{{ route('dashboard') }}" class="flex flex-wrap gap-4 items-end">
+
+        <!-- Search -->
+        <div class="flex-1 min-w-64">
+            <label class="text-gray-300 text-sm">Search by Title</label>
+            <input type="text" name="search" value="{{ $request->search }}"
+                placeholder="Enter game title..."
+                class="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-blue-600/40 rounded-md focus:ring-blue-500 shadow-[0_0_12px_rgba(0,100,255,0.4)]">
+        </div>
+
+        <!-- Category + Export -->
+        <div class="flex gap-3 min-w-64">
+            <div class="flex-1">
                 <label class="text-gray-300 text-sm">Filter by Category</label>
                 <select name="category_id"
                     class="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-blue-600/40 rounded-md">
                     <option value="">All Categories</option>
                     @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ $request->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" {{ $request->category_id == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
                     @endforeach
                 </select>
             </div>
-            <button type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
-                Search
-            </button>
-            <a href="{{ route('dashboard') }}"
-                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg shadow-[0_0_12px_rgba(255,255,255,0.3)] transition">
-                Clear Filters
-            </a>
-        </form>
-    </div>
+
+            <!-- Export to PDF -->
+            <div class="flex items-end">
+                <a href="{{ route('games.export.pdf', request()->query()) }}"
+                    class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg
+                           shadow-[0_0_18px_rgba(0,255,150,0.8)] transition">
+                    Export to PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg
+                   shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
+            Search
+        </button>
+
+        <a href="{{ route('dashboard') }}"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg
+                   shadow-[0_0_12px_rgba(255,255,255,0.3)] transition">
+            Clear Filters
+        </a>
+    </form>
+</div>
+
 
     <!-- GAMES GRID -->
     <h3 class="text-3xl font-semibold text-white drop-shadow-[0_0_12px_rgba(0,150,255,0.8)]">Games</h3>
@@ -241,6 +266,10 @@
                         </div>
 
                         <div class="md:col-span-2">
+                            <label class="text-gray-300 text-sm">Current Photo</label>
+                            <div id="currentPhotoContainer" style="display:none;" class="mt-1 mb-2">
+                                <img id="currentPhoto" class="w-full h-32 object-cover rounded-md border border-blue-600/40 shadow-[0_0_12px_rgba(0,100,255,0.5)]">
+                            </div>
                             <label class="text-gray-300 text-sm">Photo (leave empty to keep current)</label>
                             <input type="file" name="photo" accept="image/*"
                                 class="mt-1 w-full bg-gray-800 border border-blue-600/40 text-white p-2 rounded-md shadow-[0_0_12px_rgba(0,100,255,0.5)]">
@@ -274,6 +303,15 @@
         document.getElementById('editDescription').value = button.dataset.description;
         document.getElementById('editReleaseYear').value = button.dataset.release_year;
         document.getElementById('editCategoryId').value = button.dataset.category_id;
+        // Handle current photo display
+        const currentPhotoContainer = document.getElementById('currentPhotoContainer');
+        const currentPhoto = document.getElementById('currentPhoto');
+        if (button.dataset.photo) {
+            currentPhoto.src = '/storage/' + button.dataset.photo;
+            currentPhotoContainer.style.display = 'block';
+        } else {
+            currentPhotoContainer.style.display = 'none';
+        }
         // Note: File inputs can't be pre-filled for security reasons, so photo is not set
         document.getElementById('editForm').action = '/games/' + button.dataset.id;
         document.getElementById('editModal').classList.remove('hidden');

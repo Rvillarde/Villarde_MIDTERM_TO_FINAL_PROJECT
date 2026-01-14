@@ -115,4 +115,31 @@ class GameController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Game deleted successfully!');
     }
+
+    /**
+     * Export the filtered games to PDF.
+     */
+    public function exportPdf(Request $request)
+    {
+        $query = Game::with('category');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $filename = 'games.pdf';
+        if ($request->has('category_id') && !empty($request->category_id)) {
+            $query->where('category_id', $request->category_id);
+            $category = Category::find($request->category_id);
+            if ($category) {
+                $filename = $category->name . '.pdf';
+            }
+        }
+
+        $games = $query->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.games', compact('games'));
+
+        return $pdf->download($filename);
+    }
 }
