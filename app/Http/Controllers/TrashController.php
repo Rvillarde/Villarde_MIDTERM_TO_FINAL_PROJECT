@@ -10,9 +10,7 @@ use Illuminate\View\View;
 
 class TrashController extends Controller
 {
-    /**
-     * Display a listing of trashed games.
-     */
+
     public function index(Request $request): View
     {
         $query = Game::onlyTrashed()->with('category');
@@ -32,9 +30,6 @@ class TrashController extends Controller
         return view('trash', compact('trashedGames', 'totalTrashed', 'categories', 'request'));
     }
 
-    /**
-     * Restore the specified trashed game.
-     */
     public function restore(string $id): RedirectResponse
     {
         $game = Game::onlyTrashed()->findOrFail($id);
@@ -43,9 +38,7 @@ class TrashController extends Controller
         return redirect()->route('trash.index')->with('success', 'Game restored successfully!');
     }
 
-    /**
-     * Permanently delete the specified trashed game.
-     */
+
     public function forceDelete(string $id): RedirectResponse
     {
         $game = Game::onlyTrashed()->findOrFail($id);
@@ -54,9 +47,6 @@ class TrashController extends Controller
         return redirect()->route('trash.index')->with('success', 'Game permanently deleted!');
     }
 
-    /**
-     * Export trashed games list to PDF.
-     */
     public function exportPdf(Request $request)
     {
         $query = Game::onlyTrashed()->with('category');

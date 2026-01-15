@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-c function up(): void
+public function up(): void
     {
         Schema::table('games', function (Blueprint $table) {
             $table->softDeletes();

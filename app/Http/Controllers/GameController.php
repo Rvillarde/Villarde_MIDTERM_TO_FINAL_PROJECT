@@ -10,9 +10,7 @@ use Illuminate\View\View;
 
 class GameController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request): View
     {
         $query = Game::with('category');
@@ -35,17 +33,11 @@ class GameController extends Controller
         return view('dashboard', compact('games', 'totalGames', 'totalCategories', 'totalUsers', 'categories', 'request'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+    
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -65,25 +57,16 @@ class GameController extends Controller
         return redirect()->route('dashboard')->with('success', 'Game added successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id): RedirectResponse
     {
         $game = Game::findOrFail($id);
@@ -105,9 +88,6 @@ class GameController extends Controller
         return redirect()->route('dashboard')->with('success', 'Game updated successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id): RedirectResponse
     {
         $game = Game::findOrFail($id);
@@ -116,9 +96,7 @@ class GameController extends Controller
         return redirect()->route('dashboard')->with('success', 'Game deleted successfully!');
     }
 
-    /**
-     * Export the filtered games to PDF.
-     */
+
     public function exportPdf(Request $request)
     {
         $query = Game::with('category');
