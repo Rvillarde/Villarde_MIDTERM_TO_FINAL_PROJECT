@@ -85,8 +85,12 @@
 
                 <div class="md:col-span-2">
                     <label class="text-gray-300 text-sm">Photo</label>
-                    <input type="file" name="photo" accept="image/*"
-                        class="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-blue-600/40 rounded-md shadow-[0_0_12px_rgba(0,100,255,0.4)]">
+                    <input type="file" id="photoInput" name="photo" accept="image/*" style="display: none;">
+                    <button type="button" id="photoButton"
+                        class="w-full mt-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
+                        Upload Photo
+                    </button>
+                    <span id="photoFileName" class="text-gray-400 text-sm mt-1 block"></span>
                 </div>
 
             </div>
@@ -271,8 +275,12 @@
                                 <img id="currentPhoto" class="w-full h-32 object-cover rounded-md border border-blue-600/40 shadow-[0_0_12px_rgba(0,100,255,0.5)]">
                             </div>
                             <label class="text-gray-300 text-sm">Photo (leave empty to keep current)</label>
-                            <input type="file" name="photo" accept="image/*"
-                                class="mt-1 w-full bg-gray-800 border border-blue-600/40 text-white p-2 rounded-md shadow-[0_0_12px_rgba(0,100,255,0.5)]">
+                            <input type="file" id="editPhotoInput" name="photo" accept="image/*" style="display: none;">
+                            <button type="button" id="editPhotoButton"
+                                class="w-full mt-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
+                                Choose Photo
+                            </button>
+                            <span id="editPhotoFileName" class="text-gray-400 text-sm mt-1 block"></span>
                         </div>
 
                     </div>
@@ -297,6 +305,25 @@
 
 
 <script>
+    // Photo upload button handlers
+    document.getElementById('photoButton').addEventListener('click', function() {
+        document.getElementById('photoInput').click();
+    });
+
+    document.getElementById('photoInput').addEventListener('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : '';
+        document.getElementById('photoFileName').textContent = fileName;
+    });
+
+    document.getElementById('editPhotoButton').addEventListener('click', function() {
+        document.getElementById('editPhotoInput').click();
+    });
+
+    document.getElementById('editPhotoInput').addEventListener('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : '';
+        document.getElementById('editPhotoFileName').textContent = fileName;
+    });
+
     function openEditModal(button) {
         document.getElementById('editId').value = button.dataset.id;
         document.getElementById('editTitle').value = button.dataset.title;
@@ -312,6 +339,9 @@
         } else {
             currentPhotoContainer.style.display = 'none';
         }
+        // Reset photo input and filename display
+        document.getElementById('editPhotoInput').value = '';
+        document.getElementById('editPhotoFileName').textContent = '';
         // Note: File inputs can't be pre-filled for security reasons, so photo is not set
         document.getElementById('editForm').action = '/games/' + button.dataset.id;
         document.getElementById('editModal').classList.remove('hidden');
@@ -323,14 +353,14 @@
         const successEl = document.getElementById('successMessage');
         const errorEl = document.getElementById('errorMessage');
         if (successEl) {
-            setTimeout(() => { 
+            setTimeout(() => {
                 successEl.style.transition = "opacity 1s ease-out";
                 successEl.style.opacity = '0';
                 setTimeout(() => { successEl.style.display = 'none'; }, 1000);
             }, 5000);
         }
         if (errorEl) {
-            setTimeout(() => { 
+            setTimeout(() => {
                 errorEl.style.transition = "opacity 1s ease-out";
                 errorEl.style.opacity = '0';
                 setTimeout(() => { errorEl.style.display = 'none'; }, 1000);
