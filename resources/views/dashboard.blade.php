@@ -85,9 +85,12 @@
 
                 <div class="md:col-span-2">
                     <label class="text-gray-300 text-sm">Photo</label>
+                    <div id="photoPreviewContainer" style="display:none;" class="mt-1 mb-2">
+                        <img id="photoPreview" class="w-full h-32 object-cover rounded-md border border-blue-600/40 shadow-[0_0_12px_rgba(0,100,255,0.5)]">
+                    </div>
                     <input type="file" id="photoInput" name="photo" accept="image/*" style="display: none;">
                     <button type="button" id="photoButton"
-                        class="w-full mt-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
+                        class="w-full mt-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
                         Upload Photo
                     </button>
                     <span id="photoFileName" class="text-gray-400 text-sm mt-1 block"></span>
@@ -96,7 +99,7 @@
             </div>
 
             <button type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-[0_0_18px_rgba(0,120,255,0.8)] hover:shadow-[0_0_25px_rgba(0,150,255,1)] transition">
                 Add Game
             </button>
         </form>
@@ -311,8 +314,22 @@
     });
 
     document.getElementById('photoInput').addEventListener('change', function() {
-        const fileName = this.files[0] ? this.files[0].name : '';
+        const file = this.files[0];
+        const fileName = file ? file.name : '';
         document.getElementById('photoFileName').textContent = fileName;
+
+        const previewContainer = document.getElementById('photoPreviewContainer');
+        const previewImg = document.getElementById('photoPreview');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.style.display = 'none';
+        }
     });
 
     document.getElementById('editPhotoButton').addEventListener('click', function() {
